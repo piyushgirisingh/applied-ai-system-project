@@ -60,14 +60,31 @@ Copilot helped to interpret the failure message and pointed me to the core condi
 ## 4. What did you learn about Streamlit and state?
 
 - In your own words, explain why the secret number kept changing in the original app.
+
+The secret number kept changing because it was being regenerated on each rerun.
+
 - How would you explain Streamlit "reruns" and session state to a friend who has never used Streamlit?
+
+Streamlit re-executes your script every time the UI changes.
+
 - What change did you make that finally gave the game a stable secret number?
+
+I changed the code to set st.session_state['secret_number'] once (on new game) and only reset it when needed, so the number stays stable during one round
 
 ---
 
 ## 5. Looking ahead: your developer habits
 
 - What is one habit or strategy from this project that you want to reuse in future labs or projects?
+
   - This could be a testing habit, a prompting strategy, or a way you used Git.
+
+  Write a failing test first
+
 - What is one thing you would do differently next time you work with AI on a coding task?
+
+I will ask for exact code patch suggestions and review them carefully before accepting
+
 - In one or two sentences, describe how this project changed the way you think about AI generated code.
+
+After this project I view AI code suggestions like a strong assistant.

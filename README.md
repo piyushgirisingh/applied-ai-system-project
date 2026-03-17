@@ -25,14 +25,21 @@ It wrote the code, ran away, and now the game is unplayable.
 
 ## 📝 Document Your Experience
 
-- [ ] Describe the game's purpose.
-- [ ] Detail which bugs you found.
-- [ ] Explain what fixes you applied.
+- [ It's a game where a player tries to guess a number] Describe the game's purpose.
+- [ New Game button was mishandled. Out of bound scenarios existed in the game.] Detail which bugs you found.
+- [ Added explicit round end checks and consistent state updates. Added tests to cover failing cases.] Explain what fixes you applied.
+
+
 
 ## 📸 Demo
 
 - [ ] [Insert a screenshot of your fixed, winning game here]
 
+![alt text](<Screenshot 2026-03-16 at 11.14.23 PM.png>)
+
+
 ## 🚀 Stretch Features
 
 - [ ] [If you choose to complete Challenge 4, insert a screenshot of your Enhanced Game UI here]
+
+![alt text](<Screenshot 2026-03-16 at 11.20.18 PM.png>)
