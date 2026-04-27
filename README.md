@@ -9,7 +9,7 @@
 **Course:** AI110 — Module 1  
 **Original repo:** `ai110-module1show-gameglitchinvestigator-starter`
 
-The original project was a deliberately broken Streamlit number-guessing game assigned as a debugging exercise. Players guess a secret number between 1–100; the game gives directional hints ("Go Higher" / "Go Lower") and limits guesses by difficulty level (Easy: 1–20, 6 attempts; Normal: 1–100, 8 attempts; Hard: 1–50, 5 attempts). The AI-generated starter code contained five bugs — an unstable secret number that reset on every Streamlit rerun, inverted hints, a broken New Game button, acceptance of out-of-bounds guesses, and an off-by-one in attempt counting — which students identified, fixed, refactored into a testable utility module (`logic_utils.py`), and verified with a pytest suite.
+The original project was a deliberately broken Streamlit number-guessing game assigned as a debugging exercise. Players guess a secret number between 1–100; the game gives directional hints ("Go Higher" / "Go Lower") and limits guesses by difficulty level (Easy: 1–20, 6 attempts; Normal: 1–50, 8 attempts; Hard: 1–100, 5 attempts). The AI-generated starter code contained five bugs — an unstable secret number that reset on every Streamlit rerun, inverted hints, a broken New Game button, acceptance of out-of-bounds guesses, and an off-by-one in attempt counting — which students identified, fixed, refactored into a testable utility module (`logic_utils.py`), and verified with a pytest suite.
 
 ---
 
@@ -197,7 +197,7 @@ you're already ahead."
 
 ### Interaction 2 — Normal difficulty, narrowed from both sides
 
-**Setup:** Normal game (1–100).  
+**Setup:** Normal game (1–50).  
 **Guess history:** 50 → Too High, 25 → Too Low
 
 **AI Coach output:**
@@ -226,7 +226,7 @@ have at most 12 candidates left no matter what the feedback says."
 
 ### Interaction 3 — Hard difficulty, nearly solved with time pressure
 
-**Setup:** Hard game (1–50, 5 attempts).  
+**Setup:** Hard game (1–100, 5 attempts).  
 **Guess history:** 25 → Too Low, 37 → Too Low, 43 → Too High  
 **Attempts left:** 2
 
@@ -265,10 +265,10 @@ $ python eval_harness.py
   ID       Description                                Range OK  Guess  Eff%  Result
   --------------------------------------------------------------------------
   TC-01    Easy — no guesses yet (full range)             YES     10  100%    PASS  (1.2s)
-  TC-02    Normal — one Too High at 75                    YES     37  100%    PASS  (1.1s)
-  TC-03    Normal — closed in from both sides             YES     37  100%    PASS  (1.3s)
-  TC-04    Hard — nearly solved, 2 attempts left          YES     40  100%    PASS  (1.2s)
-  TC-05    Normal — exactly one number remaining          YES     66  100%    PASS  (1.0s)
+  TC-02    Hard — one Too High at 75                      YES     37  100%    PASS  (1.1s)
+  TC-03    Normal — closed in from both sides             YES     18  100%    PASS  (1.3s)
+  TC-04    Hard — nearly solved, 2 attempts left          YES     66  100%    PASS  (1.2s)
+  TC-05    Normal — exactly one number remaining          YES     33  100%    PASS  (1.0s)
   TC-06    Easy — one Too Low at 10                       YES     15  100%    PASS  (1.1s)
 
   Results : 6/6 passed

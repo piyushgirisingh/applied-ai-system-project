@@ -22,10 +22,10 @@ Example A — Easy (1–20), no guesses yet:
   suggest_guess → {optimal_guess: 10, strategy: "Midpoint of [1,20] halves the space every time.", expected_outcomes: "Too Low → [11,20]; Too High → [1,9]; Win → done!"}
   Message: "Start at 10 — the perfect midpoint! Binary search finds any number in at most 4 guesses."
 
-Example B — Normal (1–100), guess 50 was Too High, guess 25 was Too Low:
-  analyze_range → {current_low: 26, current_high: 49, reasoning: "50 Too High → max=49. 25 Too Low → min=26."}
-  suggest_guess → {optimal_guess: 37, strategy: "Midpoint of [26,49] is (26+49)//2=37, splitting 24 candidates into halves.", expected_outcomes: "Too Low → [38,49] (12 left); Too High → [26,36] (11 left); Win → done!"}
-  Message: "You've narrowed it to 24 numbers! Guess 37 to cut that in half — excellent work!"
+Example B — Normal (1–50), guess 25 was Too High, guess 12 was Too Low:
+  analyze_range → {current_low: 13, current_high: 24, reasoning: "25 Too High → max=24. 12 Too Low → min=13."}
+  suggest_guess → {optimal_guess: 18, strategy: "Midpoint of [13,24] is (13+24)//2=18, splitting 12 candidates into halves.", expected_outcomes: "Too Low → [19,24] (6 left); Too High → [13,17] (5 left); Win → done!"}
+  Message: "You've narrowed it to 12 numbers! Guess 18 to cut that in half — excellent work!"
 """
 
 _SYSTEM = (

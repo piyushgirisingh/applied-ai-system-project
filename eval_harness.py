@@ -57,47 +57,47 @@ TEST_CASES = [
     },
     {
         "id": "TC-02",
-        "description": "Normal — one Too High at 75",
+        "description": "Hard — one Too High at 75",
         "low": 1, "high": 100,
         "guess_history": [75],
         "feedback_history": [TOO_HIGH],
-        "attempts_left": 7,
-        "difficulty": "Normal",
+        "attempts_left": 4,
+        "difficulty": "Hard",
         "expected_range": (1, 74),
         "optimal_midpoint": 37,
     },
     {
         "id": "TC-03",
         "description": "Normal — closed in from both sides",
-        "low": 1, "high": 100,
-        "guess_history": [50, 25],
+        "low": 1, "high": 50,
+        "guess_history": [25, 12],
         "feedback_history": [TOO_HIGH, TOO_LOW],
         "attempts_left": 6,
         "difficulty": "Normal",
-        "expected_range": (26, 49),
-        "optimal_midpoint": 37,
+        "expected_range": (13, 24),
+        "optimal_midpoint": 18,
     },
     {
         "id": "TC-04",
         "description": "Hard — nearly solved, 2 attempts left",
-        "low": 1, "high": 50,
-        "guess_history": [25, 37, 43],
-        "feedback_history": [TOO_LOW, TOO_LOW, TOO_HIGH],
-        "attempts_left": 2,
-        "difficulty": "Hard",
-        "expected_range": (38, 42),
-        "optimal_midpoint": 40,
-    },
-    {
-        "id": "TC-05",
-        "description": "Normal — exactly one number remaining",
         "low": 1, "high": 100,
         "guess_history": [50, 75, 62, 68, 65, 67],
         "feedback_history": [TOO_LOW, TOO_HIGH, TOO_LOW, TOO_HIGH, TOO_LOW, TOO_HIGH],
         "attempts_left": 2,
-        "difficulty": "Normal",
+        "difficulty": "Hard",
         "expected_range": (66, 66),
         "optimal_midpoint": 66,
+    },
+    {
+        "id": "TC-05",
+        "description": "Normal — exactly one number remaining",
+        "low": 1, "high": 50,
+        "guess_history": [25, 38, 31, 35, 32, 34],
+        "feedback_history": [TOO_LOW, TOO_HIGH, TOO_LOW, TOO_HIGH, TOO_LOW, TOO_HIGH],
+        "attempts_left": 2,
+        "difficulty": "Normal",
+        "expected_range": (33, 33),
+        "optimal_midpoint": 33,
     },
     {
         "id": "TC-06",
@@ -199,7 +199,7 @@ def run_guardrail_tests() -> tuple[int, int]:
     total += 1
     saved_key = os.environ.pop("GEMINI_API_KEY", None)
     try:
-        get_ai_coaching(1, 100, [], [], 8, "Normal")
+        get_ai_coaching(1, 50, [], [], 8, "Normal")
         ok = False
         note = "Expected ValueError — none raised"
     except ValueError:
