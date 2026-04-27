@@ -1,4 +1,3 @@
-# 💭 Reflection: Game Glitch Investigator
 
 ## Project 4 Reflection: Building the AI Game Coach
 
