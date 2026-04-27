@@ -360,3 +360,7 @@ Finally, this project reinforced that debugging AI systems requires the same hab
 | `.env.example` | API key setup template — copy to `.env` |
 | `coach_log.txt` | Auto-generated on first run; timestamped reliability log |
 | `reflection.md` | Full debugging and AI collaboration reflection |
+
+## Loom Demo Video:
+
+https://www.loom.com/share/2615fbb4a79a4d6d9eedce2b4eedf793
