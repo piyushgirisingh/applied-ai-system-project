@@ -31,6 +31,7 @@ coverage.xml
 
 # Logs
 *.log
+coach_log.txt
 
 # OS generated files
 .DS_Store

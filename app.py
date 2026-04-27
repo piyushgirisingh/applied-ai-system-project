@@ -1,6 +1,22 @@
+import os
 import random
+import logging
 import streamlit as st
 from logic_utils import check_guess  #FIX: Moved check_guess import from app.py to logic_utils.py together with Copilot.
+
+try:
+    from dotenv import load_dotenv
+    load_dotenv()
+except ImportError:
+    pass
+
+try:
+    from ai_coach import get_ai_coaching
+    AI_AVAILABLE = bool(os.environ.get("GEMINI_API_KEY"))
+except ImportError:
+    AI_AVAILABLE = False
+
+_log = logging.getLogger("app")
 
 
 def get_range_for_difficulty(difficulty: str):
@@ -89,6 +105,18 @@ if "status" not in st.session_state:
 if "history" not in st.session_state:
     st.session_state.history = []
 
+if "feedback_history" not in st.session_state:
+    st.session_state.feedback_history = []
+
+if "ai_log" not in st.session_state:
+    st.session_state.ai_log = []
+
+if "last_coaching" not in st.session_state:
+    st.session_state.last_coaching = None
+
+if "agent_steps" not in st.session_state:
+    st.session_state.agent_steps = []
+
 st.subheader("Make a guess")
 
 st.info(
@@ -124,6 +152,10 @@ if new_game:
     st.session_state.score = 0
     st.session_state.status = "playing"
     st.session_state.history = []
+    st.session_state.feedback_history = []
+    st.session_state.ai_log = []
+    st.session_state.last_coaching = None
+    st.session_state.agent_steps = []
     st.success("New game started.")
     st.rerun()
 
@@ -151,6 +183,7 @@ if submit:
             secret = st.session_state.secret
 
         outcome, message = check_guess(guess_int, secret)
+        st.session_state.feedback_history.append(outcome)
 
         if show_hint:
             st.warning(message)
@@ -175,6 +208,94 @@ if submit:
                     f"Out of attempts! "
                     f"The secret was {st.session_state.secret}. "
                     f"Score: {st.session_state.score}"
+                )
+
+st.divider()
+st.subheader("🤖 AI Game Coach")
+
+if not AI_AVAILABLE:
+    if not os.environ.get("GEMINI_API_KEY"):
+        st.warning(
+            "AI Coach is disabled. Add `GEMINI_API_KEY` to a `.env` file "
+            "(see `.env.example`) and restart the app."
+        )
+    else:
+        st.error("Install the `google-generativeai` package: `pip install google-generativeai`")
+else:
+    valid_guesses = [g for g in st.session_state.history if isinstance(g, int)]
+
+    if os.environ.get("DEMO_MODE", "").lower() == "true":
+        st.info("🎭 **Demo Mode** — AI responses use the deterministic binary-search algorithm. No API call is made.")
+
+    if st.button("Ask AI Coach for a Hint 🤖", disabled=(st.session_state.status != "playing")):
+        with st.spinner("AI coach is analyzing your game…"):
+            try:
+                coaching = get_ai_coaching(
+                    low=low,
+                    high=high,
+                    guess_history=valid_guesses,
+                    feedback_history=st.session_state.feedback_history,
+                    attempts_left=attempt_limit - st.session_state.attempts,
+                    difficulty=difficulty,
+                )
+                st.session_state.last_coaching = coaching
+                st.session_state.agent_steps = coaching.get("steps", [])
+                st.session_state.ai_log.append({
+                    "attempt": st.session_state.attempts,
+                    "suggestion": coaching["optimal_guess"],
+                    "range": f"[{coaching['valid_range']['low']}, {coaching['valid_range']['high']}]",
+                })
+                _log.info(
+                    "AI coach invoked | attempt=%d | suggestion=%d",
+                    st.session_state.attempts,
+                    coaching["optimal_guess"],
+                )
+            except ValueError as e:
+                st.error(str(e))
+            except Exception as e:
+                _log.error("AI coaching failed: %s", e, exc_info=True)
+                st.error(f"AI coach error: {e}")
+
+    if st.session_state.last_coaching:
+        coaching = st.session_state.last_coaching
+        col_a, col_b = st.columns(2)
+        with col_a:
+            st.metric("💡 Suggested Guess", coaching["optimal_guess"])
+            st.caption(
+                f"Valid range: **{coaching['valid_range']['low']}** – "
+                f"**{coaching['valid_range']['high']}**"
+            )
+        with col_b:
+            st.markdown("**Strategy**")
+            st.write(coaching.get("strategy", ""))
+
+        if coaching.get("coach_message"):
+            st.info(coaching["coach_message"])
+
+        with st.expander("🔍 Agent Reasoning Steps"):
+            for i, step in enumerate(st.session_state.agent_steps, start=1):
+                icon = "✅" if step["validation"] == "OK" else "⚠️ Corrected"
+                out = step["output"]
+                if step["tool"] == "analyze_range":
+                    st.markdown(
+                        f"**Step {i} — `analyze_range`** {icon}  \n"
+                        f"Range: **[{out['low']}, {out['high']}]**  \n"
+                        f"Reasoning: {out.get('reasoning', '')}"
+                    )
+                elif step["tool"] == "suggest_guess":
+                    st.markdown(
+                        f"**Step {i} — `suggest_guess`** {icon}  \n"
+                        f"Optimal guess: **{out['optimal_guess']}**  \n"
+                        f"Expected outcomes: {out.get('expected_outcomes', '')}"
+                    )
+
+    if st.session_state.ai_log:
+        with st.expander("📋 AI Suggestion Log (Reliability)"):
+            for entry in st.session_state.ai_log:
+                st.write(
+                    f"After attempt **{entry['attempt']}**: "
+                    f"suggested **{entry['suggestion']}** "
+                    f"(valid range {entry['range']})"
                 )
 
 st.divider()
