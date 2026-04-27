@@ -90,7 +90,6 @@ flowchart TD
     Dev -->|reviews + iterates| Results
 ```
 
-> ASCII fallback (if Mermaid does not render):
 ```
   👤 Player                              👨‍💻 Developer
      │  guess / AI Coach button               │  python eval_harness.py
@@ -347,17 +346,6 @@ Finally, this project reinforced that debugging AI systems requires the same hab
 
 ---
 
-## Screenshots
-
-**Fixed game (Module 1):**
-
-![Fixed game](Screenshot%202026-03-16%20at%2011.14.23%20PM.png)
-
-**Enhanced UI (Module 1 stretch):**
-
-![Enhanced UI](Screenshot%202026-03-16%20at%2011.20.18%20PM.png)
-
----
 
 ## File Reference
 
